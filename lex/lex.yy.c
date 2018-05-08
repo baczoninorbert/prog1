@@ -1,4 +1,6 @@
-
+// compile lex szoveg.l
+// gcc lex.yy.c -ly -ll
+// ./a.out
 #line 3 "lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
