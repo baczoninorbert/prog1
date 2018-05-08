@@ -59,13 +59,13 @@ int main(int argc, char *argv[])
   string sor;
       int count = 0;
   bool esport = false;
-  std::map<std::string, unsigned int> ember; 
-  std::map<int, string> rendez; 
+  std::map<std::string, unsigned int> ember;
+  std::map<int, string> rendez;
   std::map<string,vector<double>> vedesek;
   std::map<vector<double>,string> forditottvedes;
   std::multimap<pair<int,int>,string> minden;
   std::multimap<string,pair<string,int>> feladatok;
- 
+
   map<string,double> vedesjegy;
   std::multimap<std::vector<double>,string> fmultivedes;
   multimap<int,string> fordiottpont;
@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
   typedef boost::bimap< map<int,int>, std::string > bm_type;
   bm_type bm;
 
-  
+
   vector <string> vedes;
   int ertek = 0;
   bool ved1 = false, ved2 = false , ved3 = false;
@@ -87,10 +87,10 @@ int main(int argc, char *argv[])
     it1 = it2;
     string nev = *it1;
     it2 ++;
-    string props;	
+    string props;
     string hely = *it2;
-    
-    string eredeti = hely;	
+
+    string eredeti = hely;
     string last;
     boost::char_separator<char> sep2("/");
     tokenizer tokens2 (hely,sep2);
@@ -119,8 +119,8 @@ int main(int argc, char *argv[])
       if(vedes[9] == "Védés" && vedes[8] == "Labor" && vedesek[*it1].size() < 3)
       {
 
-      
-       
+
+
        vedesek[*it1].push_back(0);
        vedesek[*it1].push_back(0);
        vedesek[*it1].push_back(0);
@@ -132,15 +132,15 @@ int main(int argc, char *argv[])
 	if(vedes[10] == "I")
 	{
 	 if((szam = jegy(vedes[11])) > vedesek[*it1][0])
-	 { 
-	   
+	 {
+
 	   vedesek[*it1][0] = szam;
 	 }
 	}
-	
+
 	if(vedes[10] == "II")
 	{
-	  
+
 	  if((szam = jegy(vedes[11])) > vedesek[*it1][1])
 	  {
 	   vedesek[*it1][1] = szam;
@@ -159,20 +159,20 @@ int main(int argc, char *argv[])
      }
      else{
      vedes.clear();
-     } 
-  
+     }
+
    hely += "/" + last + ".props";
-  
+
     string pontsor;
     bool letezik = fileExists(hely);
-    if (letezik==true)    
+    if (letezik==true)
     {
       ifstream pont(hely);
       int pontszamfeladat = 0;
       string helyipont ;
       while(getline(pont,pontsor))
       {
-	
+
 	boost::char_separator<char> sep3("   \t");
 	tokenizer tokens3(pontsor, sep3);
 	for(tokenizer::iterator it4 = tokens3.begin(); it4 != tokens3.end(); it4++)
@@ -180,110 +180,112 @@ int main(int argc, char *argv[])
 	   helyipont = *it4;
 	}
 	pontszamfeladat += stol(helyipont);
-	
+
       }
       ember[nev] += pontszamfeladat;
       feladatok.insert( make_pair( *it1,make_pair(*it2,pontszamfeladat)));
       pontszamfeladat = 0;
     }
-    
+
   }
   for(auto const value: ember)
   {
     fordiottpont.insert(make_pair(value.second,value.first));
   }
-  
+
    // abc szerinti
-   
+
     for (const auto& pair : vedesek)
 	{
 		double atlag = 0;
 		double szamolo = 0;
-		
+
 		for (std::size_t i = 0; i < pair.second.size(); ++i){
 		  if(pair.second[i] != 0)
 		    szamolo++;
 		  atlag += pair.second[i];
-		  
-		 
+
+
 		}
 		double vedesatlag = (double)atlag / (double)szamolo;
 		if((vedesatlag-(int)vedesatlag) > 0.5) {
-		  
+
 		  abszolut[pair.first][szamolo] = (int)vedesatlag + 1;
 		 minden.insert( make_pair(make_pair(szamolo,(int)vedesatlag + 1 ), pair.first));
 
 		}
-		  
+
 		else
 		{
-		  
+
 		  abszolut[pair.first][szamolo] = (int)vedesatlag;
 		  minden.insert( make_pair(make_pair(szamolo,(int)vedesatlag  ), pair.first));
 
 		}
 	}
-   
+
     /* abc kiiras
-    for (auto it : abszolut) 
+    for (auto it : abszolut)
     {
       cout << it.first << " : ";
       map<int, int> &internal_map = it.second;
-      for (auto it2: internal_map) 
+      for (auto it2: internal_map)
       {
         cout << it2.first << ":" << it2.second;
-      }	
+      }
     cout << endl;
     }
     */
-  
- 
+
+
  if (argv[2] == std::string("vedes"))
    {
     for (auto& iter : boost::adaptors::reverse(minden)) {
       std::cout <<iter.second << ": " << iter.first.first << " " << iter.first.second <<  std::endl;
     }
    }
-   
+
   /* if (argv[2] == std::string("pont"))
    {
-     
-     
+
+
     for (auto iter = rendez.rbegin(); iter != rendez.rend(); ++iter) {
         std::cout << iter->second << ": "<< iter->first << std::endl;
       }
-     
+
    }
    */
-   if ( argc == 3 && argv[2] == std::string("pont"))
+   if (argv[2] == std::string("pont"))
    {
-    
-     
-	for (auto& iter : boost::adaptors::reverse(fordiottpont)) {
-	 std::cout <<iter.second << ": "  << " " << iter.first <<  std::endl;
-	}
-     
-     
-     }
-   else {
-     if (argc == 4 && argv[2] == std::string("pont"))
-     {
-       string temp = argv[3];
-	int szam = stoi(temp);
-	int count = 0;
-	for (auto& iter : boost::adaptors::reverse(fordiottpont)) {
-	 std::cout <<iter.second << ": "  << " " << iter.first <<  std::endl;
-	 count++;
-	 if(count == szam)
-	   break;
-	}
-     }
+     int szamolo2 = 1;
+      if(argc == 3)
+      {
+	  for (auto& iter : boost::adaptors::reverse(fordiottpont)) {
+	   std::cout <<szamolo2 << ". " << iter.second << ": "  << " " << iter.first <<  std::endl;
+     szamolo2++;
+	  }
+       }
+
+      	else{ if(argc == 4) {
+
+	 string szam = argv[3];
+	 int szamocska = stoi(szam);
+	 int count = 0;
+	 for (auto& iter : boost::adaptors::reverse(fordiottpont)) {
+	    std::cout <<count+1<<". "<<iter.second << ": "  << " " << iter.first <<  std::endl;
+	     count++;
+	     if(count == szamocska)
+	        break;
+         }
+      }
+
+   }
    }
    if(argv[2] != std::string("vedes") && argv[2] != std::string("pont"))
    {
 	int osszeg = 0;
 	for(auto const &elem : feladatok)
-	  {   
+	  {
 	    string emberecske = argv[2];
 	    string temp;
 	    int mennyivanmeg = 3;
@@ -293,24 +295,24 @@ int main(int argc, char *argv[])
 		emberecske += " " + temp;
 		mennyivanmeg++;
 	    }
-    
+
    if(emberecske == elem.first)
     {
      cout << elem.second.first << " " << elem.second.second << "\n";
      osszeg += elem.second.second;
     }
-   
+
   }
   if(osszeg != 0)
   cout << "osszesen = " << osszeg << "\n";
   else
     cout << "HIBA: a nev hibas, vagy az illeto nem jelolt be semmilyen olyan tevekenyseget amely pontot erne\n";
   }
-  // boostal kiirva   
+  // boostal kiirva
   /*
   for (auto& iter : boost::adaptors::reverse(rendez)) {
     std::cout << iter.second << ": " << iter.first << std::endl;
-  } 
+  }
   */
 }
 
@@ -323,5 +325,3 @@ bool fileExists(const std::string& filename)
     }
     return false;
 }
-  
-  
