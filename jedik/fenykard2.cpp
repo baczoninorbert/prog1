@@ -261,7 +261,7 @@ int main(int argc, char *argv[])
       if(argc == 3)
       {
 	  for (auto& iter : boost::adaptors::reverse(fordiottpont)) {
-	   std::cout <<szamolo2 << ". " << iter.second << ": "  << " " << iter.first <<  std::endl;
+	   std::cout << setw(3) <<szamolo2 << ". " << iter.second << ": "  << " " << iter.first <<  std::endl;
      szamolo2++;
 	  }
        }
@@ -272,7 +272,7 @@ int main(int argc, char *argv[])
 	 int szamocska = stoi(szam);
 	 int count = 0;
 	 for (auto& iter : boost::adaptors::reverse(fordiottpont)) {
-	    std::cout <<count+1<<". "<<iter.second << ": "  << " " << iter.first <<  std::endl;
+	    std::cout << setw(3) << count+1<<". "<<iter.second << ": "  << " " << iter.first <<  std::endl;
 	     count++;
 	     if(count == szamocska)
 	        break;
